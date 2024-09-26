@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:SmartPoopoo/common_widgets.dart';
 import 'package:SmartPoopoo/screens/image_picker_screen.dart';
 import 'package:SmartPoopoo/screens/image_detection_screen.dart';
+import 'package:SmartPoopoo/screens/diary_screen.dart'; // 다이어리 화면 import
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,8 @@ class HomePageState extends State<HomePage> {
   String? selectedImageUrl;
   String defaultImageUrl =
       'https://www.nct.org.uk/sites/default/files/3to4.jpg';
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +97,14 @@ class HomePageState extends State<HomePage> {
                       });
                     }
                   }, "앨범에서 가져오기 버튼"),
+                  buildMenuButton(context, "다이어리 보기", () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DiaryScreen(),
+                      ),
+                    );
+                  }, "다이어리 보기 버튼"), // 다이어리 화면 버튼 추가
                 ],
               ),
             ),

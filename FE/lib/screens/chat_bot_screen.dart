@@ -3,6 +3,8 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:SmartPoopoo/services/config.dart' as config;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ChatBotScreen extends StatefulWidget {
   final String analysisResult;
@@ -74,12 +76,36 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
   void _sendMessageFromVoice() {
     if (_text.isNotEmpty) {
+      _saveDiaryEntry(_text); // 음성 인식 결과를 백엔드에 저장
+
       ChatMessage message = ChatMessage(
         text: _text,
         user: _user,
         createdAt: DateTime.now(),
       );
       getChatResponse(message); // DashChat에 메시지 추가
+    }
+  }
+
+  // 백엔드로 데이터 전송하는 함수
+  Future<void> _saveDiaryEntry(String text) async {
+    try {
+      final url = Uri.parse('http://localhost:5000/diary'); // 백엔드 서버 URL로 변경해야 함!
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'entry': text}),
+      );
+
+      if (response.statusCode == 200) {
+        print('다이어리 항목이 성공적으로 저장되었습니다.');
+      } else {
+        print('다이어리 저장에 실패했습니다: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('오류 발생: $e');
     }
   }
 
